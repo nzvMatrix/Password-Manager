@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Password Manager</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Password Manager</h1>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider round"></span>
+            </label>
+        </header>
+        <main>
+            <section class="form-section">
+                <h2>Add New Password</h2>
+                <form action="{{ url_for('add') }}" method="post">
+                    <input type="text" name="site" placeholder="Site" required>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <label>
+                        <input type="checkbox" id="showPassword"> Show Password
+                    </label>
+                    <button type="submit">Add Password</button>
+                </form>
+            </section>
+            <section class="form-section">
+                <h2>Edit Password</h2>
+                <form id="editForm" action="{{ url_for('edit_password') }}" method="post" style="display: none;">
+                    <input type="hidden" name="original_site">
+                    <input type="text" name="site" placeholder="Site" required>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" id="editPassword" placeholder="Password" required>
+                    <label>
+                        <input type="checkbox" id="showEditPassword"> Show Password
+                    </label>
+                    <button type="submit">Update Password</button>
+                </form>
+            </section>
+            <section class="passwords-section">
+                <h2>Saved Passwords</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Site</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for password in passwords %}
+                            <tr>
+                                <td>{{ password[0] }}</td>
+                                <td>{{ password[1] }}</td>
+                                <td>{{ password[2] }}</td>
+                                <td><button class="edit-button" data-site="{{ password[0] }}" data-username="{{ password[1] }}" data-password="{{ password[2] }}">Edit</button></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script>
+        // Toggle Dark Mode
+        const toggleSwitch = document.getElementById('darkModeToggle');
+        toggleSwitch.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Handle Edit Button Clicks
+        const editButtons = document.querySelectorAll('.edit-button');
+        const editForm = document.getElementById('editForm');
+        const originalSiteInput = editForm.querySelector('input[name="original_site"]');
+        const siteInput = editForm.querySelector('input[name="site"]');
+        const usernameInput = editForm.querySelector('input[name="username"]');
+        const passwordInput = editForm.querySelector('input[name="password"]');
+        
+        editButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                originalSiteInput.value = button.getAttribute('data-site');
+                siteInput.value = button.getAttribute('data-site');
+                usernameInput.value = button.getAttribute('data-username');
+                passwordInput.value = button.getAttribute('data-password');
+                editForm.style.display = 'block';
+            });
+        });
+
+        // Show Password Toggle
+        const showPasswordCheckbox = document.getElementById('showPassword');
+        const passwordField = document.getElementById('password');
+        showPasswordCheckbox.addEventListener('change', () => {
+            passwordField.type = showPasswordCheckbox.checked ? 'text' : 'password';
+        });
+
+        const showEditPasswordCheckbox = document.getElementById('showEditPassword');
+        const editPasswordField = document.getElementById('editPassword');
+        showEditPasswordCheckbox.addEventListener('change', () => {
+            editPasswordField.type = showEditPasswordCheckbox.checked ? 'text' : 'password';
+        });
+    </script>
+</body>
+</html>
