@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
@@ -54,11 +55,12 @@ def edit_password():
         SET site = ?, username = ?, password = ? 
         WHERE site = ?
     ''', (new_site, new_username, new_password, original_site))
+    
     conn.commit()
     conn.close()
     
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    init_db()
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
