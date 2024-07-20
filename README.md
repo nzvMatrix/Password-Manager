@@ -1,6 +1,6 @@
 # Password Manager
 
-A simple and secure password manager built with Flask and SQLite. This application allows users to add, view, and edit passwords, toggle dark/light mode and view passwords with a show/hide option.
+A simple and secure password manager built with Flask and SQLite. This application allows users to add, view and edit passwords, toggle dark/light mode and view passwords with a show/hide option.
 
 ## Features
 
